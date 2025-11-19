@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>T-MINUS: PROTOCOL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Russo+One&display=swap" rel="stylesheet">
+    <style>
+      /* Custom Scrollbar for Cyberpunk feel */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #09090b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #84cc16; 
+        border: 1px solid #000;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #bef264;
+      }
+      body {
+        background-color: #050505;
+        color: #e4e4e7;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .hard-shadow {
+        box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+      }
+      .hard-shadow-sm {
+        box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+      }
+      .neon-glow {
+        text-shadow: 0 0 10px rgba(132, 204, 22, 0.5);
+      }
+      .grid-bg {
+        background-image: linear-gradient(rgba(20, 20, 20, 0.7) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 20, 20, 0.7) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
