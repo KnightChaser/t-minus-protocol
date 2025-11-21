@@ -11,9 +11,29 @@ interface CountdownDisplayProps {
   onReset: () => void;
 }
 
+const TimeUnitGroup = ({ value, label, minDigits = 2 }: { value: number, label: string, minDigits?: number }) => {
+  // Helper to split number into digits
+  const getDigits = (num: number, minLength: number) => {
+    const str = num.toString().padStart(minLength, '0');
+    return str.split('').map(Number);
+  };
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="flex gap-2">
+        {getDigits(value, minDigits).map((d, i) => (
+          <RollingDigit key={`${label}-${i}`} value={d} />
+        ))}
+      </div>
+      <span className="text-zinc-500 font-bold text-xs tracking-[0.2em] uppercase mt-6">
+        {label}
+      </span>
+    </div>
+  );
+};
+
 export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onReset }) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: false });
-  const [tick, setTick] = useState(0);
 
   const calculateTimeLeft = useCallback(() => {
     const difference = +target.targetDate - +new Date();
@@ -36,27 +56,20 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
     const timer = setInterval(() => {
       const tl = calculateTimeLeft();
       setTimeLeft(tl);
-      setTick(t => t + 1);
       if (tl.isComplete) clearInterval(timer);
     }, 1000);
 
     return () => clearInterval(timer);
   }, [calculateTimeLeft]);
 
-  // Helper to split number into digits
-  const getDigits = (num: number, minLength: number = 2) => {
-    const str = num.toString().padStart(minLength, '0');
-    return str.split('').map(Number);
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] w-full max-w-6xl mx-auto px-4 relative z-10">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] w-full max-w-7xl mx-auto px-4 relative z-10">
       
       {/* Header Info */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full flex flex-col md:flex-row justify-between items-end border-b-4 border-zinc-800 pb-4 mb-12"
+        className="w-full flex flex-col md:flex-row justify-between items-end border-b-4 border-zinc-800 pb-4 mb-16"
       >
         <div>
           <div className="text-lime-400 text-xs font-bold tracking-[0.3em] mb-1">CURRENT_OBJECTIVE</div>
@@ -73,38 +86,11 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
       </motion.div>
 
       {/* Main Countdown */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 w-full justify-items-center mb-16">
-        {/* Days */}
-        <div className="flex gap-2">
-          {getDigits(timeLeft.days, 3).map((d, i) => (
-            <RollingDigit key={`d-${i}`} value={d} label={i === 1 ? "DAYS" : ""} />
-          ))}
-        </div>
-
-        {/* Hours */}
-        <div className="flex gap-2 relative">
-          {/* Separator for desktop */}
-          <span className="hidden md:block absolute -left-8 top-8 text-4xl text-zinc-800 font-[Russo_One]">:</span>
-          {getDigits(timeLeft.hours).map((d, i) => (
-            <RollingDigit key={`h-${i}`} value={d} label={i === 0 ? "HOURS" : ""} />
-          ))}
-        </div>
-
-        {/* Minutes */}
-        <div className="flex gap-2 relative">
-           <span className="hidden md:block absolute -left-8 top-8 text-4xl text-zinc-800 font-[Russo_One]">:</span>
-          {getDigits(timeLeft.minutes).map((d, i) => (
-            <RollingDigit key={`m-${i}`} value={d} label={i === 0 ? "MINS" : ""} />
-          ))}
-        </div>
-
-        {/* Seconds */}
-        <div className="flex gap-2 relative">
-           <span className="hidden md:block absolute -left-8 top-8 text-4xl text-zinc-800 font-[Russo_One]">:</span>
-          {getDigits(timeLeft.seconds).map((d, i) => (
-            <RollingDigit key={`s-${i}`} value={d} label={i === 0 ? "SECS" : ""} />
-          ))}
-        </div>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 mb-20 w-full flex-wrap">
+        <TimeUnitGroup value={timeLeft.days} label="DAYS" minDigits={3} />
+        <TimeUnitGroup value={timeLeft.hours} label="HOURS" />
+        <TimeUnitGroup value={timeLeft.minutes} label="MINUTES" />
+        <TimeUnitGroup value={timeLeft.seconds} label="SECONDS" />
       </div>
 
       {/* Status Bar / Footer */}
