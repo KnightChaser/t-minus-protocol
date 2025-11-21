@@ -3,7 +3,7 @@ import { RollingDigit } from './RollingDigit';
 import { CountdownTarget, TimeLeft } from '../types';
 import { CyberButton } from './ui/CyberButton';
 import { GlitchText } from './ui/GlitchText';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, HeartPulse } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface CountdownDisplayProps {
@@ -34,6 +34,7 @@ const TimeUnitGroup = ({ value, label, minDigits = 2 }: { value: number, label: 
 
 export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onReset }) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: false });
+  const [heartbeats, setHeartbeats] = useState<number>(0);
 
   const calculateTimeLeft = useCallback(() => {
     const difference = +target.targetDate - +new Date();
@@ -51,16 +52,26 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
   }, [target.targetDate]);
 
   useEffect(() => {
-    setTimeLeft(calculateTimeLeft());
-    
-    const timer = setInterval(() => {
+    const update = () => {
       const tl = calculateTimeLeft();
       setTimeLeft(tl);
+
+      // Heartbeat calculation: 80 BPM
+      const now = new Date().getTime();
+      const tgt = target.targetDate.getTime();
+      const diff = Math.max(0, tgt - now);
+      // 80 beats per minute = 80/60 beats per second
+      const beats = Math.floor((diff / 1000) * (80 / 60));
+      setHeartbeats(beats);
+
       if (tl.isComplete) clearInterval(timer);
-    }, 1000);
+    };
+
+    update();
+    const timer = setInterval(update, 100); // Update frequently for heartbeat precision
 
     return () => clearInterval(timer);
-  }, [calculateTimeLeft]);
+  }, [calculateTimeLeft, target.targetDate]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] w-full max-w-7xl mx-auto px-4 relative z-10">
@@ -100,8 +111,9 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
              <AlertTriangle size={14} className={timeLeft.isComplete ? "text-rose-500" : "text-yellow-500"} />
              <span>STATUS: {timeLeft.isComplete ? "MISSION_COMPLETE" : "COUNTDOWN_ACTIVE"}</span>
           </div>
-          <div className="hidden md:block">
-             SYNC_ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}
+          <div className="hidden md:flex items-center gap-2 text-zinc-500">
+             <HeartPulse size={14} className="text-rose-600 animate-pulse" />
+             <span>ONLY <span className="text-rose-500 font-bold">{heartbeats.toLocaleString()}</span> HEARTBEATS LEFT</span>
           </div>
         </div>
 
