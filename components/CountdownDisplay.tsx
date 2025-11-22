@@ -3,7 +3,7 @@ import { RollingDigit } from './RollingDigit';
 import { CountdownTarget, TimeLeft } from '../types';
 import { CyberButton } from './ui/CyberButton';
 import { GlitchText } from './ui/GlitchText';
-import { AlertTriangle, RefreshCw, HeartPulse } from 'lucide-react';
+import { AlertTriangle, RefreshCw, HeartPulse, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { calculateTimeLeft, heartbeatCount, getDigits } from '../utils';
@@ -101,7 +101,7 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
 
         <CyberButton onClick={onReset} variant="secondary" className="py-2 px-4 text-sm border-2">
           <span className="flex items-center gap-2">
-            <RefreshCw size={14} /> ABORT / RESET
+            <Settings size={14} /> CONFIGURE
           </span>
         </CyberButton>
       </div>

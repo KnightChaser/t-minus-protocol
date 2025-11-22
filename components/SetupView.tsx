@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CyberButton } from './ui/CyberButton';
 import { GlitchText } from './ui/GlitchText';
 import { Calendar, Clock, Terminal, Palette } from 'lucide-react';
@@ -7,17 +7,24 @@ import { ThemeColor } from '../types';
 
 interface SetupViewProps {
   onStart: (title: string, date: Date) => void;
+  initialConfig?: { title: string; date: string; time: string; theme: ThemeColor } | null;
 }
 /**
  * Setup view rendered when creating a new countdown target.
  * Collects title, date and time and then invokes `onStart` with a Date.
  */
-export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+export const SetupView: React.FC<SetupViewProps> = ({ onStart, initialConfig }) => {
+  const [title, setTitle] = useState(initialConfig?.title || '');
+  const [date, setDate] = useState(initialConfig?.date || '');
+  const [time, setTime] = useState(initialConfig?.time || '');
   
   const { theme, setTheme, classes } = useTheme();
+
+  useEffect(() => {
+    if (initialConfig?.theme) {
+      setTheme(initialConfig.theme);
+    }
+  }, [initialConfig?.theme, setTheme]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

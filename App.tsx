@@ -9,6 +9,7 @@ import { getGradientForTheme, getAmbientColor } from './utils';
 const AppContent: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.SETUP);
   const [target, setTarget] = useState<CountdownTarget | null>(null);
+  const [initialConfig, setInitialConfig] = useState<{ title: string; date: string; time: string; theme: ThemeColor } | null>(null);
   const { theme, setTheme, classes } = useTheme();
 
   useEffect(() => {
@@ -40,11 +41,32 @@ const AppContent: React.FC = () => {
       targetDate
     });
     setAppState(AppState.RUNNING);
+    setInitialConfig(null);
+
+    // Update URL with current config
+    const url = new URL(window.location.href);
+    url.searchParams.set('title', title);
+    url.searchParams.set('theme', theme);
+    url.searchParams.set('date', targetDate.toISOString().split('T')[0]);
+    url.searchParams.set('time', targetDate.toTimeString().slice(0, 5));
+    window.history.replaceState(null, '', url.toString());
   };
 
   const handleReset = () => {
+    if (target) {
+      const dateStr = target.targetDate.toISOString().split('T')[0];
+      const timeStr = target.targetDate.toTimeString().slice(0, 5);
+      setInitialConfig({
+        title: target.title,
+        date: dateStr,
+        time: timeStr,
+        theme: theme
+      });
+    }
     setAppState(AppState.SETUP);
-    setTarget(null);
+
+    // Clear URL params when configuring
+    window.history.replaceState(null, '', window.location.pathname);
   };
 
   // Use utilities to map theme into UI classes (keeps AppContent focused on layout)
@@ -78,7 +100,7 @@ const AppContent: React.FC = () => {
               transition={{ duration: 0.4 }}
               className="w-full"
             >
-              <SetupView onStart={handleStart} />
+              <SetupView onStart={handleStart} initialConfig={initialConfig} />
             </motion.div>
           )}
 
