@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SetupView } from './components/SetupView';
 import { CountdownDisplay } from './components/CountdownDisplay';
-import { AppState, CountdownTarget } from './types';
+import { AppState, CountdownTarget, ThemeColor } from './types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { getGradientForTheme, getAmbientColor } from './utils';
@@ -9,7 +9,29 @@ import { getGradientForTheme, getAmbientColor } from './utils';
 const AppContent: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.SETUP);
   const [target, setTarget] = useState<CountdownTarget | null>(null);
-  const { theme, classes } = useTheme();
+  const { theme, setTheme, classes } = useTheme();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get('title');
+    const themeParam = params.get('theme') as ThemeColor;
+    const date = params.get('date');
+    const time = params.get('time');
+
+    if (title && themeParam && date && time && ['lime', 'cyan', 'amber', 'fuchsia', 'rose'].includes(themeParam)) {
+      const targetDate = new Date(`${date}T${time}`);
+      if (!isNaN(targetDate.getTime()) && targetDate > new Date()) {
+        setTheme(themeParam);
+        const newTarget: CountdownTarget = {
+          id: Date.now().toString(),
+          title,
+          targetDate
+        };
+        setTarget(newTarget);
+        setAppState(AppState.RUNNING);
+      }
+    }
+  }, [setTheme]);
 
   const handleStart = (title: string, targetDate: Date) => {
     setTarget({

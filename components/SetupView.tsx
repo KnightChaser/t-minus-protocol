@@ -28,6 +28,19 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
     onStart(finalTitle, target);
   };
 
+  const handleShare = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('title', title || 'PROTOCOL: UNKNOWN');
+    url.searchParams.set('theme', theme);
+    url.searchParams.set('date', date);
+    url.searchParams.set('time', time);
+    navigator.clipboard.writeText(url.toString()).then(() => {
+      alert('URL copied to clipboard!');
+    }).catch(() => {
+      alert('Failed to copy URL. Here it is: ' + url.toString());
+    });
+  };
+
   const themes: { id: ThemeColor; color: string; label: string }[] = [
     { id: 'lime', color: 'bg-lime-400', label: 'NEON_LIME' },
     { id: 'cyan', color: 'bg-cyan-400', label: 'CYBER_CYAN' },
@@ -123,9 +136,18 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 space-y-4">
             <CyberButton type="submit" className="w-full py-5 text-xl">
               ENGAGE TIMER
+            </CyberButton>
+            <CyberButton 
+              type="button" 
+              onClick={handleShare} 
+              variant="secondary" 
+              className="w-full py-3 text-sm" 
+              disabled={!date || !time}
+            >
+              SHARE CONFIGURATION
             </CyberButton>
           </div>
         </form>
