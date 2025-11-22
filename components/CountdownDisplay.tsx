@@ -97,7 +97,7 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
       </motion.div>
 
       {/* Main Countdown */}
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 mb-20 w-full flex-wrap">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 mb-20 w-full flex-wrap">
         <TimeUnitGroup value={timeLeft.days} label="DAYS" minDigits={3} />
         <TimeUnitGroup value={timeLeft.hours} label="HOURS" />
         <TimeUnitGroup value={timeLeft.minutes} label="MINUTES" />
@@ -129,13 +129,29 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
         >
-          <div className="border-4 border-rose-500 bg-black p-12 max-w-2xl w-full mx-4 text-center hard-shadow relative overflow-hidden">
-             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-             <GlitchText text="TIME_EXPIRED" as="h1" className="text-6xl md:text-8xl font-[Russo_One] text-rose-500 mb-6 block" />
-             <p className="text-white font-mono text-xl mb-8 uppercase tracking-widest">Protocol {target.title} has concluded.</p>
-             <CyberButton onClick={onReset} variant="danger">Acknowledge</CyberButton>
+          <div className="border-4 border-rose-500 bg-black p-8 md:p-12 max-w-2xl w-full text-center hard-shadow relative overflow-hidden">
+             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
+             
+             <div className="relative z-10 mb-8">
+               <GlitchText 
+                  text="TIME_EXPIRED" 
+                  as="h1" 
+                  className="text-5xl md:text-7xl font-[Russo_One] text-rose-500 block break-all leading-none" 
+               />
+             </div>
+
+             <p className="text-white font-mono text-lg md:text-xl mb-8 uppercase tracking-widest relative z-10">
+               {target.title.toUpperCase().match(/^(PROTOCOL|OPERATION)/) 
+                  ? target.title 
+                  : `PROTOCOL: ${target.title}`} 
+               {' '}HAS CONCLUDED.
+             </p>
+             
+             <div className="relative z-10">
+                <CyberButton onClick={onReset} variant="danger">Acknowledge</CyberButton>
+             </div>
           </div>
         </motion.div>
       )}
