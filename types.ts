@@ -14,6 +14,7 @@ export interface CountdownTarget {
  * Structured representation of the remaining time until target.
  */
 export interface TimeLeft {
+  years: number;
   days: number;
   hours: number;
   minutes: number;

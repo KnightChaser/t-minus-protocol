@@ -2,22 +2,31 @@ import { TimeLeft, ThemeColor } from './types';
 
 /**
  * Calculate the remaining time until `targetDate`.
- * Returns a TimeLeft object with days, hours, minutes, seconds and isComplete.
+ * Returns a TimeLeft object with years, days, hours, minutes, seconds and isComplete.
  */
 export function calculateTimeLeft(targetDate: Date): TimeLeft {
   const difference = +targetDate - +new Date();
 
   if (difference > 0) {
+    const msPerYear = 1000 * 60 * 60 * 24 * 365.25;
+    const years = Math.floor(difference / msPerYear);
+    const remainingAfterYears = difference % msPerYear;
+    const days = Math.floor(remainingAfterYears / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remainingAfterYears / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((remainingAfterYears / 1000 / 60) % 60);
+    const seconds = Math.floor((remainingAfterYears / 1000) % 60);
+
     return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
+      years,
+      days,
+      hours,
+      minutes,
+      seconds,
       isComplete: false
     };
   }
 
-  return { days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: true };
+  return { years: 0, days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: true };
 }
 
 /**

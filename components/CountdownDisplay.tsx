@@ -31,7 +31,7 @@ const TimeUnitGroup = ({ value, label, minDigits = 2 }: { value: number, label: 
 
 export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onReset }) => {
   const { classes } = useTheme();
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: false });
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ years: 0, days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: false });
   const [heartbeats, setHeartbeats] = useState<number>(0);
 
   // Use shared helper to compute time left for testability and reuse
@@ -79,6 +79,7 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
 
       {/* Main Countdown */}
       <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 mb-20 w-full flex-wrap">
+        {timeLeft.years > 0 && <TimeUnitGroup value={timeLeft.years} label="YEARS" minDigits={2} />}
         <TimeUnitGroup value={timeLeft.days} label="DAYS" minDigits={3} />
         <TimeUnitGroup value={timeLeft.hours} label="HOURS" />
         <TimeUnitGroup value={timeLeft.minutes} label="MINUTES" />
