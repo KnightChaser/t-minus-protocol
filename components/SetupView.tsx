@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CyberButton } from './ui/CyberButton';
 import { GlitchText } from './ui/GlitchText';
+import { CyberNotification } from './ui/CyberNotification';
 import { Calendar, Clock, Terminal, Palette } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { ThemeColor } from '../types';
@@ -17,6 +18,11 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart, initialConfig }) 
   const [title, setTitle] = useState(initialConfig?.title || '');
   const [date, setDate] = useState(initialConfig?.date || '');
   const [time, setTime] = useState(initialConfig?.time || '');
+  const [notification, setNotification] = useState<{ show: boolean; message: string; type: 'success' | 'error' }>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
   
   const { theme, setTheme, classes } = useTheme();
 
@@ -42,9 +48,9 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart, initialConfig }) 
     url.searchParams.set('date', date);
     url.searchParams.set('time', time);
     navigator.clipboard.writeText(url.toString()).then(() => {
-      alert('URL copied to clipboard!');
+      setNotification({ show: true, message: 'Configuration URL copied to clipboard.', type: 'success' });
     }).catch(() => {
-      alert('Failed to copy URL. Here it is: ' + url.toString());
+      setNotification({ show: true, message: 'Failed to copy URL. Please copy manually.', type: 'error' });
     });
   };
 
@@ -159,6 +165,13 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart, initialConfig }) 
           </div>
         </form>
       </div>
+      
+      <CyberNotification 
+        isVisible={notification.show}
+        message={notification.message}
+        type={notification.type}
+        onClose={() => setNotification(prev => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };
