@@ -6,7 +6,10 @@ interface CyberButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'danger';
   isLoading?: boolean;
 }
-
+/**
+ * Themed button used across the app. Wraps framer-motion's button props
+ * and exposes a `variant` and `isLoading` flag.
+ */
 export const CyberButton: React.FC<CyberButtonProps> = ({ 
   children, 
   variant = 'primary', 

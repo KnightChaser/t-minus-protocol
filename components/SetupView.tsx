@@ -8,7 +8,10 @@ import { ThemeColor } from '../types';
 interface SetupViewProps {
   onStart: (title: string, date: Date) => void;
 }
-
+/**
+ * Setup view rendered when creating a new countdown target.
+ * Collects title, date and time and then invokes `onStart` with a Date.
+ */
 export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');

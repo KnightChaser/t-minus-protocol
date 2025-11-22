@@ -6,7 +6,10 @@ interface GlitchTextProps {
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
   className?: string;
 }
-
+/**
+ * Decorative text component that renders layered animated copies
+ * of the provided text to give a glitch/chromatic aberration effect.
+ */
 export const GlitchText: React.FC<GlitchTextProps> = ({ text, as: Component = 'span', className = '' }) => {
   return (
     <Component className={`relative inline-block group ${className}`}>

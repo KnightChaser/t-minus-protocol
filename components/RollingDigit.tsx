@@ -3,10 +3,16 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface RollingDigitProps {
+  /** Digit to display (0-9) */
   value: number;
+  /** Visual size variant for the digit container */
   size?: 'sm' | 'lg';
 }
 
+/**
+ * Animated vertical rolling digit. The component renders digits 0-9
+ * in a stacked column and animates translation to show the current value.
+ */
 export const RollingDigit: React.FC<RollingDigitProps> = ({ value, size = 'lg' }) => {
   const { classes } = useTheme();
   // Array of digits 0-9

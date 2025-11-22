@@ -6,6 +6,7 @@ import { GlitchText } from './ui/GlitchText';
 import { AlertTriangle, RefreshCw, HeartPulse } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
+import { calculateTimeLeft, heartbeatCount, getDigits } from '../utils';
 
 interface CountdownDisplayProps {
   target: CountdownTarget;
@@ -13,12 +14,7 @@ interface CountdownDisplayProps {
 }
 
 const TimeUnitGroup = ({ value, label, minDigits = 2 }: { value: number, label: string, minDigits?: number }) => {
-  // Helper to split number into digits
-  const getDigits = (num: number, minLength: number) => {
-    const str = num.toString().padStart(minLength, '0');
-    return str.split('').map(Number);
-  };
-
+  // Use shared utility to split a number into digits for consistent formatting
   return (
     <div className="flex flex-col items-center">
       <div className="flex gap-2">
@@ -38,33 +34,16 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: false });
   const [heartbeats, setHeartbeats] = useState<number>(0);
 
-  const calculateTimeLeft = useCallback(() => {
-    const difference = +target.targetDate - +new Date();
-    
-    if (difference > 0) {
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-        isComplete: false
-      };
-    }
-    return { days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: true };
-  }, [target.targetDate]);
+  // Use shared helper to compute time left for testability and reuse
+  const calculateTimeLeftLocal = useCallback(() => calculateTimeLeft(target.targetDate), [target.targetDate]);
 
   useEffect(() => {
     const update = () => {
-      const tl = calculateTimeLeft();
+      const tl = calculateTimeLeftLocal();
       setTimeLeft(tl);
 
       // Heartbeat calculation: 80 BPM
-      const now = new Date().getTime();
-      const tgt = target.targetDate.getTime();
-      const diff = Math.max(0, tgt - now);
-      // 80 beats per minute = 80/60 beats per second
-      const beats = Math.floor((diff / 1000) * (80 / 60));
-      setHeartbeats(beats);
+      setHeartbeats(heartbeatCount(target.targetDate));
 
       if (tl.isComplete) clearInterval(timer);
     };
