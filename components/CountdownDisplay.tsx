@@ -5,6 +5,7 @@ import { CyberButton } from './ui/CyberButton';
 import { GlitchText } from './ui/GlitchText';
 import { AlertTriangle, RefreshCw, HeartPulse } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface CountdownDisplayProps {
   target: CountdownTarget;
@@ -33,6 +34,7 @@ const TimeUnitGroup = ({ value, label, minDigits = 2 }: { value: number, label: 
 };
 
 export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onReset }) => {
+  const { classes } = useTheme();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: false });
   const [heartbeats, setHeartbeats] = useState<number>(0);
 
@@ -83,7 +85,7 @@ export const CountdownDisplay: React.FC<CountdownDisplayProps> = ({ target, onRe
         className="w-full flex flex-col md:flex-row justify-between items-end border-b-4 border-zinc-800 pb-4 mb-16"
       >
         <div>
-          <div className="text-lime-400 text-xs font-bold tracking-[0.3em] mb-1">CURRENT_OBJECTIVE</div>
+          <div className={`${classes.text} text-xs font-bold tracking-[0.3em] mb-1 transition-colors duration-300`}>CURRENT_OBJECTIVE</div>
           <GlitchText text={target.title} as="h2" className="text-3xl md:text-5xl font-[Russo_One] text-white uppercase" />
         </div>
         <div className="text-right mt-4 md:mt-0">

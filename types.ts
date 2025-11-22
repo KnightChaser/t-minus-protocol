@@ -17,3 +17,5 @@ export enum AppState {
   RUNNING = 'RUNNING',
   COMPLETE = 'COMPLETE'
 }
+
+export type ThemeColor = 'lime' | 'cyan' | 'amber' | 'fuchsia' | 'rose';

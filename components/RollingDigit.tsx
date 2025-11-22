@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface RollingDigitProps {
   value: number;
@@ -7,6 +8,7 @@ interface RollingDigitProps {
 }
 
 export const RollingDigit: React.FC<RollingDigitProps> = ({ value, size = 'lg' }) => {
+  const { classes } = useTheme();
   // Array of digits 0-9
   const digits = Array.from({ length: 10 }, (_, i) => i);
   
@@ -30,8 +32,11 @@ export const RollingDigit: React.FC<RollingDigitProps> = ({ value, size = 'lg' }
         {digits.map((digit) => (
           <div
             key={digit}
-            style={{ height: `${height}px` }}
-            className={`flex items-center justify-center font-['Intel_One_Mono'] font-bold ${fontSize} leading-none text-lime-400 neon-glow w-full pb-3`}
+            style={{ 
+              height: `${height}px`,
+              textShadow: `0 0 10px ${classes.glowColor}`
+            }}
+            className={`flex items-center justify-center font-['Intel_One_Mono'] font-bold ${fontSize} leading-none ${classes.text} w-full pb-3 transition-colors duration-300`}
           >
             {digit}
           </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface CyberButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'danger';
@@ -13,15 +14,20 @@ export const CyberButton: React.FC<CyberButtonProps> = ({
   isLoading,
   ...props 
 }) => {
-  let bgClass = 'bg-lime-400 text-black hover:bg-lime-300';
-  let borderClass = 'border-lime-600';
-  
+  const { classes } = useTheme();
+
+  let bgClass = `${classes.bg} text-black ${classes.bgHover}`;
+  let borderClass = ''; // Handled mostly by base style or variant overrides if needed
+  let textClass = 'text-black';
+
   if (variant === 'secondary') {
-    bgClass = 'bg-zinc-800 text-lime-400 hover:bg-zinc-700';
+    bgClass = `bg-zinc-800 ${classes.text} hover:bg-zinc-700`;
     borderClass = 'border-zinc-600';
+    textClass = classes.text;
   } else if (variant === 'danger') {
     bgClass = 'bg-rose-600 text-white hover:bg-rose-500';
     borderClass = 'border-rose-800';
+    textClass = 'text-white';
   }
 
   return (
