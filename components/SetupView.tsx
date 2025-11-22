@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { CyberButton } from './ui/CyberButton';
 import { GlitchText } from './ui/GlitchText';
-import { generateMissionName } from '../services/geminiService';
-import { Calendar, Clock, Zap, Terminal, Palette } from 'lucide-react';
+import { Calendar, Clock, Terminal, Palette } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { ThemeColor } from '../types';
 
@@ -14,17 +13,8 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
   
   const { theme, setTheme, classes } = useTheme();
-
-  const handleGenerateName = async () => {
-    setIsGenerating(true);
-    const context = title || "Doomsday Event";
-    const name = await generateMissionName(context);
-    setTitle(name);
-    setIsGenerating(false);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,20 +85,10 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="ENTER NAME OR GENERATE..."
+                placeholder="ENTER NAME..."
                 className={`flex-1 bg-black border-2 border-zinc-700 p-3 text-white font-mono focus:${classes.border} focus:outline-none transition-colors`}
               />
-              <CyberButton 
-                type="button" 
-                variant="secondary" 
-                onClick={handleGenerateName}
-                isLoading={isGenerating}
-                className="shrink-0"
-              >
-                <Zap size={20} />
-              </CyberButton>
             </div>
-            <p className="text-xs text-zinc-600">USE AI ASSIST FOR CRYPTIC PROTOCOL NAMES</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
